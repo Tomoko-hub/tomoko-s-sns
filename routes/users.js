@@ -1,21 +1,38 @@
 const router = require("express").Router();
-const User = require.require("../models/User");
+const User = require("../models/User");
 
-//user registration
-router.post("/register", async (req, res) => {
-    try{
-        const newUser = await new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-        });
-
-        const user = await newUser.save();
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(500).json(err);
+// CRUD
+// Read user info
+// Update user info
+router.put("/:id", async(req, res) => {
+    if (req.body.userId === req.params.id || req.body.isAdmin) {
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, {
+                $set: req.body,
+            });
+            res.status(200).json("User info has updated!");
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    } else {
+        return res.status(403).json("You have to use own account.");
     }
 });
+
+// Delete user info
+router.delete("/:id", async(req, res) => {
+    if (req.body.userId === req.params.id || req.body.isAdmin) {
+        try {
+            const user = await User.findByIdAndDelete(req.params.id);
+            res.status(200).json("User info has deleted.");
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    }  else {
+            return res.status(403).json("You cannot delete.");
+        }
+});
+
 
 /*
 router.get("/", (req,res) => {
