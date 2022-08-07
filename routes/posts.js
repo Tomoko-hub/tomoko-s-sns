@@ -73,6 +73,17 @@ router.put("/:id/like", async(req, res) => {
     }
 });
 
+// Get timeline for use'sown profile page
+router.get("/profile/:username", async(req, res) => {
+    try {
+        const user = await User.findOne({username:req.params.username});
+        const posts = await Post.find({ userId: user._id });
+        return res.status(200).json(posts)
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+});
+
 //GET posts user's timeline
 router.get("/timeline/:userId", async(req, res) => {
     try {
