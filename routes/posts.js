@@ -73,7 +73,7 @@ router.put("/:id/like", async(req, res) => {
     }
 });
 
-// Get timeline for use'sown profile page
+// Get timeline for use's own profile page
 router.get("/profile/:username", async(req, res) => {
     try {
         const user = await User.findOne({username:req.params.username});
